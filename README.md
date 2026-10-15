@@ -65,6 +65,7 @@ index.html          Página (marcado)
 assets/styles.css   Estilos y animaciones (incluye prefers-reduced-motion)
 assets/app.js       Lógica: oráculo, cuerda, sonidos, voz y registro
 assets/favicon.svg  Ícono
+assets/og-image.png Imagen de vista previa al compartir el link (1200×630)
 .nojekyll           Publica los archivos tal cual en GitHub Pages
 ```
 
@@ -77,6 +78,10 @@ python3 -m http.server 8000
 ```
 
 y abre http://localhost:8000/.
+
+## Vista previa al compartir
+
+`index.html` declara título, descripción e imagen Open Graph (`assets/og-image.png`), así que el link se ve con tarjeta en Teams, WhatsApp y otras apps. La URL de la imagen es absoluta, como lo exige WhatsApp; si el sitio cambia de dirección, actualiza `og:url`, `og:image` y `twitter:image`. Teams y WhatsApp guardan la vista previa en caché un tiempo: si cambias la imagen, puede tardar en verse.
 
 ## Publicación
 
