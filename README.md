@@ -6,7 +6,7 @@ Oráculo oficial · no vinculante. Una página de broma para el equipo de Finanz
 
 ## Cómo se usa
 
-1. Escribe tu pregunta (o no escribas nada y pregunta en silencio).
+1. Escribe tu pregunta. Sin pregunta, la caracola y la argolla quedan apagadas y no responden.
 2. Pide la respuesta de cualquiera de estas formas:
    - **Tira de la cuerda:** arrastra la argolla hacia abajo al menos 60 px y suelta. Un clic (o Enter) sobre la argolla hace un tirón automático.
    - **Toca la caracola.**

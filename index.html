@@ -52,7 +52,7 @@
 
 <div class="cmf-field">
 <label for="cmf-q" class="cmf-label">Tu pregunta</label>
-<input id="cmf-q" class="cmf-input" type="text" maxlength="140" autocomplete="off" placeholder="¿Me aprueban la modificación presupuestaria?">
+<input id="cmf-q" class="cmf-input" type="text" maxlength="140" autocomplete="off" placeholder="¿Me aprueban la modificación financiera?" aria-describedby="cmf-hint">
 </div>
 
 <div class="cmf-speech" aria-live="polite">
@@ -79,7 +79,7 @@
 
 <div id="cmf-cord" class="cmf-cord" aria-hidden="true"></div>
 
-<button type="button" id="cmf-shell" class="cmf-shell" aria-label="Tocar la caracola para recibir una respuesta">
+<button type="button" id="cmf-shell" class="cmf-shell is-locked" aria-disabled="true" aria-label="Tocar la caracola para recibir una respuesta">
 <svg width="300" height="270" viewBox="-150 -130 300 270" aria-hidden="true">
 <ellipse cx="0" cy="134" rx="96" ry="6" fill="#071A2E"></ellipse>
 <circle cx="0" cy="0" r="105" fill="#F2BE57" stroke="#5E3510" stroke-width="5"></circle>
@@ -97,10 +97,10 @@
 </svg>
 </button>
 
-<button type="button" id="cmf-ring" class="cmf-ring" aria-label="Tirar de la cuerda"></button>
+<button type="button" id="cmf-ring" class="cmf-ring is-locked" aria-disabled="true" aria-label="Tirar de la cuerda"></button>
 </div>
 
-<p id="cmf-hint" class="cmf-hint">Arrastra la argolla hacia abajo y suelta, o toca la caracola.</p>
+<p id="cmf-hint" class="cmf-hint">Escribe tu pregunta para despertar a la caracola.</p>
 
 <button type="button" id="cmf-toggle" class="cmf-toggle">
 <svg id="cmf-icon-on" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"></path><path d="M16.5 8.5a5 5 0 0 1 0 7"></path><path d="M19 6a8.5 8.5 0 0 1 0 12"></path></svg>

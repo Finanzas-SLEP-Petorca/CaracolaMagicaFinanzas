@@ -220,7 +220,8 @@ const RESPUESTAS = {
     version: 0,
     storageOk: inicial.ok,
     filtro: '',
-    confirmClear: false
+    confirmClear: false,
+    needQuestion: false // se intentó preguntar sin escribir nada
   };
 
   let startY = 0;
@@ -257,11 +258,16 @@ const RESPUESTAS = {
     const s = state;
     const pull = s.pull;
 
+    const locked = !s.thinking && !tienePregunta();
+
     let hint = 'Arrastra la argolla hacia abajo y suelta, o toca la caracola.';
     if (s.dragging) hint = pull >= 60 ? '¡Suelta la cuerda!' : 'Un poco más…';
     else if (s.thinking) hint = 'La caracola está deliberando…';
+    else if (locked) hint = s.needQuestion ? 'Primero escribe tu pregunta.' : 'Escribe tu pregunta para despertar a la caracola.';
 
     if (el.q.value !== s.question) el.q.value = s.question;
+    if (s.needQuestion && locked) el.q.setAttribute('aria-invalid', 'true');
+    else el.q.removeAttribute('aria-invalid');
 
     el.idle.hidden = !(!s.thinking && !s.answer);
     el.thinking.hidden = !s.thinking;
@@ -274,8 +280,12 @@ const RESPUESTAS = {
     el.cord.style.transition = s.dragging ? 'none' : 'height 480ms ' + SPRING;
     el.ring.style.transform = 'translateY(' + pull + 'px)';
     el.ring.style.transition = s.dragging ? 'none' : 'transform 480ms ' + SPRING;
-    el.ring.style.cursor = s.dragging ? 'grabbing' : 'grab';
+    el.ring.style.cursor = locked ? 'not-allowed' : (s.dragging ? 'grabbing' : 'grab');
     el.shell.classList.toggle('cmf-wobble', s.thinking);
+    el.shell.classList.toggle('is-locked', locked);
+    el.ring.classList.toggle('is-locked', locked);
+    el.shell.setAttribute('aria-disabled', String(locked));
+    el.ring.setAttribute('aria-disabled', String(locked));
 
     el.hint.textContent = hint;
 
@@ -557,10 +567,24 @@ const RESPUESTAS = {
     return { registro: lista, version: state.version + 1, storageOk: ok };
   }
 
+  function tienePregunta() {
+    return String(state.question || '').trim() !== '';
+  }
+
+  // Intento sin pregunta: avisa y lleva el foco al campo.
+  function pedirPregunta() {
+    setState({ needQuestion: true });
+    el.q.classList.remove('cmf-nudge');
+    void el.q.offsetWidth; // reinicia la animación
+    el.q.classList.add('cmf-nudge');
+    el.q.focus();
+  }
+
   // via: 'cuerda' | 'caracola' | 'teclado'
   function ask(via) {
     if (state.thinking) return;
     const q = String(state.question || '').trim();
+    if (!q) return;
     stopVoice();
     playHum();
     setState({ thinking: true, answer: '' });
@@ -586,6 +610,10 @@ const RESPUESTAS = {
 
   function tug(via) {
     if (state.thinking || state.dragging) return;
+    if (!tienePregunta()) {
+      pedirPregunta();
+      return;
+    }
     unlock();
     playZip();
     setState({ pull: 90 });
@@ -600,8 +628,10 @@ const RESPUESTAS = {
    * ----------------------------------------------------------------------- */
 
   el.q.addEventListener('input', (e) => {
-    setState({ question: String(e.target.value).slice(0, 140) });
+    setState({ question: String(e.target.value).slice(0, 140), needQuestion: false });
   });
+
+  el.q.addEventListener('animationend', () => el.q.classList.remove('cmf-nudge'));
 
   el.q.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -612,6 +642,10 @@ const RESPUESTAS = {
 
   el.shell.addEventListener('click', () => {
     if (state.thinking) return;
+    if (!tienePregunta()) {
+      pedirPregunta();
+      return;
+    }
     unlock();
     playBloop();
     ask('caracola');
@@ -619,7 +653,7 @@ const RESPUESTAS = {
 
   el.ring.addEventListener('pointerdown', (e) => {
     if (e.button !== undefined && e.button !== 0) return;
-    if (state.thinking) return;
+    if (state.thinking || !tienePregunta()) return;
     startY = e.clientY;
     moved = false;
     armed = false;
@@ -644,7 +678,7 @@ const RESPUESTAS = {
     if (!state.dragging) return;
     const fire = state.pull >= 60;
     setState({ dragging: false, pull: 0 });
-    if (fire) {
+    if (fire && tienePregunta()) {
       playZip();
       ask('cuerda');
     }

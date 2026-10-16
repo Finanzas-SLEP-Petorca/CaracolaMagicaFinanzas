@@ -14,6 +14,7 @@ a:hover { color: #FFD3BD; }
 @keyframes cmf-twinkle { 0%, 100% { opacity: .35; transform: scale(.75) } 50% { opacity: 1; transform: scale(1) } }
 @keyframes cmf-wobble { 0%, 100% { transform: rotate(-4deg) } 50% { transform: rotate(4deg) } }
 @keyframes cmf-pop { 0% { opacity: 0; transform: scale(.6) } 60% { opacity: 1; transform: scale(1.08) } 100% { opacity: 1; transform: scale(1) } }
+@keyframes cmf-nudge { 0%, 100% { transform: translateX(0) } 20% { transform: translateX(-8px) } 40% { transform: translateX(7px) } 60% { transform: translateX(-5px) } 80% { transform: translateX(3px) } }
 @keyframes cmf-blink { 0%, 80%, 100% { opacity: .25; transform: translateY(0) } 40% { opacity: 1; transform: translateY(-8px) } }
 
 /* ---------- Página ---------- */
@@ -52,6 +53,7 @@ a:hover { color: #FFD3BD; }
 }
 .cmf-input::placeholder { color: #8FA9C4; }
 .cmf-input:focus { border-color: #FF8A5B !important; box-shadow: 0 0 0 4px rgba(255, 138, 91, .25); }
+.cmf-nudge { animation: cmf-nudge .4s ease-in-out; }
 
 /* Globo de respuesta */
 .cmf-speech {
@@ -89,8 +91,12 @@ a:hover { color: #FFD3BD; }
   padding: 0; margin: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer;
   transform-origin: 192px 228px; transition: transform .2s ease;
 }
-.cmf-shell svg { display: block; overflow: visible; }
+.cmf-shell svg { display: block; overflow: visible; transition: filter .25s ease; }
 .cmf-shell:hover { transform: scale(1.03); }
+/* Sin pregunta escrita, la caracola y la argolla quedan bloqueadas. */
+.cmf-shell.is-locked { cursor: not-allowed; }
+.cmf-shell.is-locked:hover { transform: none; }
+.cmf-shell.is-locked svg { filter: saturate(.6) brightness(.88); }
 .cmf-wobble, .cmf-wobble:hover { animation: cmf-wobble .5s ease-in-out infinite; }
 
 .cmf-ring {
@@ -98,8 +104,9 @@ a:hover { color: #FFD3BD; }
   padding: 0; margin: 0; box-sizing: border-box; border-radius: 50%;
   border: 9px solid var(--acento); background: transparent; box-shadow: 0 4px 0 rgba(3, 14, 26, .45);
   cursor: grab; touch-action: none; transform: translateY(0);
-  transition: transform 480ms cubic-bezier(.34, 1.56, .64, 1);
+  transition: transform 480ms cubic-bezier(.34, 1.56, .64, 1), opacity .25s ease;
 }
+.cmf-ring.is-locked { opacity: .55; }
 
 .cmf-hint { margin: 0; min-height: 24px; font-size: 15px; font-weight: 600; line-height: 1.5; color: #B8CCE0; }
 
@@ -213,5 +220,5 @@ a:hover { color: #FFD3BD; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cmf-bubble, .cmf-star, .cmf-wobble, .cmf-pop, .cmf-dot { animation: none !important; }
+  .cmf-bubble, .cmf-star, .cmf-wobble, .cmf-pop, .cmf-dot, .cmf-nudge { animation: none !important; }
 }
